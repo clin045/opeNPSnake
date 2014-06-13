@@ -24,8 +24,12 @@ def generate(lst,titlelst):
         report.write('</tr>\n')
     report.write('</table>')
     
+<<<<<<< HEAD
     
 #for testing purposes
+=======
+
+>>>>>>> origin/master
 generate([[0,1],[2,3]],['cats','dogs'])
 
 
