@@ -7,15 +7,13 @@ report = open(str(datetime.datetime.today()).replace(':','').replace('.','').rep
 
 #this method expects a two-dimensional list containing the data as lst, and a one-dimensional list containing titles as titlelst
 def generate(lst,titlelst):
-    #make the document pretty
-    #report.write("""
-    #             
-    #             """)
+    #make the document pretty (inthefuture)
+
     report.write('<table border="1">')
     report.write('<tr>\n')
-    #writes titles to first row
+    #writes titles as heading
     for title in titlelst:
-        report.write('<td>'+title+'</td>\n')
+        report.write('<th>'+title+'</th>\n')
     report.write('</tr>\n')
     #writes data
     for i in range(0,len(lst)):
