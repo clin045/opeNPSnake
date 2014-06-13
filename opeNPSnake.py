@@ -3,8 +3,15 @@
 #find data
 #store in list
 #generate report
-parameters = []
 
+import os
+
+parameters = []
+folder = ""
+
+def getFolderPath():
+    global folder
+    user_input = input("Enter the folder path where the logs are stored.").replace('\\', '/')
 def getParameters():
     user_input = ""
     while user_input != 'done':
