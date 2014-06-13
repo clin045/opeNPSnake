@@ -25,7 +25,7 @@ def generate(lst,titlelst):
     report.write('</table>')
     
     
-
+#for testing purposes
 generate([[0,1],[2,3]],['cats','dogs'])
 
 
