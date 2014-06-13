@@ -7,6 +7,7 @@
 #test_folder = C:\Users\jeramy.lochner\Desktop\NPSLogFile
 
 import os
+import htmlReportGen
 
 parameters = []         #Parameters input by users
 possible_params = []    #Possible parameters they could input
@@ -91,4 +92,5 @@ getFolderPath()
 checkFilesForParameters()
 getParameters()
 parseFiles()
+htmlReportGen.generate(values, parameters)
     
