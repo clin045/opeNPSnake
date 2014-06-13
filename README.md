@@ -10,3 +10,5 @@ Invoke opeNPSnake from the command line:
   $ python opeNPSnake.py
   ```
 Follow the on screen instructions. Keep all hands and feet inside the car at all times. You're in for a wild ride.
+
+Your report will be generated in the same directory the script was run.
