@@ -3,13 +3,15 @@ import datetime, os
 
 #this method expects a two-dimensional list containing the data as lst, and a one-dimensional list containing titles as titlelst
 def generate(folder, lst, titlelst, count=[]):
-    #make the document pretty (inthefuture)
+ 
     
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
     report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
+    #import js library for sortable tables
     report.write("<head>")
     report.write('<script src="'+ str(os.getcwd()) + '\\sorttable.js"></script>')
     report.write("</head>")
+    #css for tables and title
     report.write("""
     <style>
 h1{
