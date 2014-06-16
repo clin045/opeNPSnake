@@ -130,13 +130,9 @@ def getCmdOpts():
             
             
 
-folder = 'C:/Users/jeramy.lochner/Desktop/NPSLogFile/'
-checkFilesForParameters()
-getParameters()
-parseFiles()
-#getCmdOpts()
+getCmdOpts()
 #checkFilesForParameters()
 #getParameters()
 #parseFiles()
-htmlReportGen.generate(values, parameters, count)
+#htmlReportGen.generate(values, parameters, count)
 
