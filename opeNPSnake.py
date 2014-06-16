@@ -93,10 +93,12 @@ def getParameters():
     print("\n"*100)
 
 
-
-getFolderPath()
-checkFilesForParameters()
-getParameters()
-parseFiles()
-htmlReportGen.generate(values, parameters)
+def main():
+    getFolderPath()
+    checkFilesForParameters()
+    getParameters()
+    parseFiles()
+    htmlReportGen.generate(values, parameters)
     
+if __name__ == '__main__':
+    main()
