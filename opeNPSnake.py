@@ -35,7 +35,9 @@ Options:
     -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
     -o Output directory
     -P Prints list of log parameterss
-    -p specifies parameters you want to grab
+    -p Specifies parameters you want to grab
+    -c TODO Specifies config file
+
 
      
 """
