@@ -138,6 +138,7 @@ def main():
             for param in possible_params:
                 print(param.replace("-", " "))
         elif opt == '-p':
+            global filters
             params = []
             params = arg.split(',')
             paramlst = []
@@ -156,4 +157,3 @@ def main():
             
 if __name__ == '__main__':
     main()
-
