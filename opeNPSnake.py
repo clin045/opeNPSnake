@@ -137,6 +137,7 @@ def main():
             for param in possible_params:
                 print(param.replace("-", " "))
         elif opt == '-p':
+            global filters
             params = []
             params = arg.split(',')
             paramlst = []
@@ -147,8 +148,9 @@ def main():
                     filterlst.append(p.split(':')[1])
                 except:
                     filterlst.append('')
-            filters.append(filterlst)
+            filters=filterlst
             getParameters(paramlst)
+         
             
 
 
@@ -156,5 +158,5 @@ main()
 #checkFilesForParameters()
 #getParameters()
 #parseFiles()
-#htmlReportGen.generate(values, parameters, count)
+#htmlReportGen.generate('C:/Users/christopher.lin/Documents/GitHub/opeNPSnake/', values, parameters, count)
 
