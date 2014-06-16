@@ -6,7 +6,7 @@
 
 #test_folder = C:\Users\jeramy.lochner\Desktop\NPSLogFile
 
-import os, sys, getopt
+import os
 import htmlReportGen
 
 parameters = []         #Parameters input by users
@@ -16,27 +16,6 @@ folder = ""             #Folder where logs are located
 front_extra = ' data_type="4">'         #The extras included at the end of every opening tag i.e i.e '<Computer-Name data_type="4">'
 back_extra = '</'                       #The extras included at the beginning of every closing tag i.e '</Computer-Name>
 values = []
-
-helpfile="""
-               ,   .,---.,---.          |         
-,---.,---.,---.|\  ||---'`---.,---.,---.|__/ ,---.
-|   ||   ||---'| \ ||        ||   |,---||  \ |---'
-`---'|---'`---'`  `'`    `---'`   '`---^`   ``---'
-     |
-
-Parses NPS logs and generates useful reports
-
-Usage: python opeNPSnake.py -i "filepath" [options]
-
-Options:
-    -h Prints out this help file
-    -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
-    -o Output directory
-    -P Prints list of log parameterss
-    -p specifies parameters you want to grab
-
-     
-"""
 
 
 # Grab the values from <''> </''> tags
@@ -72,6 +51,7 @@ def parseFiles():
 def checkFilesForParameters():
     for file in os.listdir(folder):
         if file.endswith('.log'):
+            print("Checking file: " + file + " for possible parameter types")
             inputfile = open(folder + file)
             lines = inputfile.readlines()
             lastindex = 0           # Init a temp var to hold where you are in the line
@@ -87,16 +67,6 @@ def checkFilesForParameters():
                         possible_params.append(param)                       
                     lastindex+=1
             inputfile.close()
-<<<<<<< HEAD
-    for param in possible_params:
-        print("\t" + param)
-    
-    
-def getFolderPath(path):
-    global folder
-    temp = path.replace('\\', '/')
-    if temp[-1:] != "/":
-=======
     print("\n"*100)
 
 # Gets user input of what folder it's in
@@ -104,20 +74,14 @@ def getFolderPath():
     global folder
     temp = input("Enter the folder path where the logs are stored.\n").replace('\\', '/')
     if temp[-1:] != "/":        #Append a final '/'
->>>>>>> origin/master
         temp += "/"
     folder = temp
-    print("done")
-    
 
 # Gets user input on what parameters they want in the report
 def getParameters():
     user_input = ""
-<<<<<<< HEAD
-=======
     for param in possible_params:
         print("\t" + param.replace("-", " "))
->>>>>>> origin/master
     print("\n\n")
     print("Fully-Qualifed-User-Names is not spelled correctly in the logs\nSpell it as it is spelled here\n")
     while user_input != 'Done':
@@ -128,38 +92,14 @@ def getParameters():
         elif user_input not in possible_params and user_input != 'Done':
             print("That isn't a valid parameter")
     print("\n"*100)
-    
-def getCmdOpts():
-    try:
-        opts, args = getopt.getopt(sys.argv[1:],'hi:o:p')
-    except:
-        print(helpfile)
-    for opt, arg in opts:
-        if opt == '-h':
-            print(helpfile)
-        elif opt == '-i':
-            getFolderPath(arg)
-        #TODO set output dir
-        elif opt == '-P':
-            checkFilesForParameters()
-            
-            
 
 
-<<<<<<< HEAD
-getCmdOpts()
-#checkFilesForParameters()
-#getParameters()
-#parseFiles()
-#htmlReportGen.generate(values, parameters)
-=======
 def main():
     getFolderPath()
     checkFilesForParameters()
     getParameters()
     parseFiles()
     htmlReportGen.generate(values, parameters)
->>>>>>> origin/master
     
 if __name__ == '__main__':
     main()
