@@ -1,4 +1,4 @@
-import os, sys, getopt
+import os, sys, getopt, configparser
 import htmlReportGen
 
 
@@ -144,8 +144,32 @@ def getParameters(params):
             
 #loads config file
 def loadConf(loc):
-    print('this is gonna work in the near future')
+    loc = loc.replace('\\', '/')
+    c = configparser.ConfigParser()
+    c.read(loc)
+    section='Config'
+    options=c.options(section)
+    global inputDir,outputDir
+    paramlst = {}
+    for o in options:
+        if o == 'parameters':
+            arg = c.get(section,o)
+            params = arg.split(',')
+            for p in params:
+                filterlst=[]
+                try:
+                    filterlst=p.split(':')[1:]
+                except:
+                    filterlst.append('')
 
+                paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
+        if o == 'input':
+            print(c.get(section,o))
+            inputDir = getFolderPath(c.get(section,o))
+        if o == 'output':
+            print(c.get(section,o))
+            outputDir = getFolderPath(c.get(section,o))
+    getParameters(paramlst)
 #Main
 #We should probably split this up but whatever
 def main():
@@ -158,6 +182,7 @@ def main():
     #    print(helpfile)
     #do stuff based on options
     for opt, arg in opts:
+        paramlst = {}
         #print help file
         if opt == '-h':
             print(helpfile)
@@ -176,7 +201,6 @@ def main():
         #selects parameters for parsing
         elif opt == '-p':
             params = arg.split(',')
-            paramlst = {}
             for p in params:
                 filterlst=[]
                 try:
@@ -186,7 +210,7 @@ def main():
 
                 paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
 
-            getParameters(paramlst)
+            
         #specifies the time frame
         elif opt == '-t':
             times = arg.split(',')
@@ -196,6 +220,7 @@ def main():
         elif opt == '-c':
             loadConf(arg)
     #Make sure they specified a -p parameter
+    getParameters(paramlst)
     if len(parameters) > 0:
         parseFiles()
         #Generating the reports
