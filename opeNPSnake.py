@@ -86,7 +86,7 @@ def checkFilesForParameters():
                     lastindex+=1
             inputfile.close()
     for param in possible_params:
-        print("\t" + param).replace("-", " ")
+        print("\t" + param.replace("-", " "))
     
     
 def getFolderPath(path):
@@ -95,7 +95,6 @@ def getFolderPath(path):
     if temp[-1:] != "/":
         temp += "/"
     folder = temp
-    print("done")
     
 
 def getParameters():
@@ -112,7 +111,7 @@ def getParameters():
     
 def getCmdOpts():
     try:
-        opts, args = getopt.getopt(sys.argv[1:],'hi:o:p')
+        opts, args = getopt.getopt(sys.argv[1:],'hi:o:P')
     except:
         print(helpfile)
     for opt, arg in opts:
