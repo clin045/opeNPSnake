@@ -41,6 +41,10 @@ Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
      
 """
 
+#Converts the time from cron format to MM/DD/YY HH:MM:SS
+def convertTime(time):
+    print(time)
+    
 #Gets the xml values from the logs
 #Expects the line of text from the log, the starting <' '> tag and ending </' '> tag
 def get_xml_value(line, start_tag, end_tag):
@@ -188,14 +192,21 @@ def main():
             times = arg.split(',')
             start_time = convertTime(times[0])
             end_time = convertTime(times[1])
+
         elif opt == '-c':
             loadConf(arg)
-            
-    parseFiles()
-    if outputDir == '':
-        htmlReportGen.generate(values, parameters, count)
+    #Make sure they specified a -p parameter
+    if len(possible_params) > 0:
+        parseFiles()
+        #Generating the reports
+        #If there wasn't a specified outputDir we just use the default(cwd)
+        if outputDir == '':
+            htmlReportGen.generate(values, parameters, count)
+        else:
+            htmlReportGen.generate(values, parameters, count, outputDir)
+
     else:
-        htmlReportGen.generate(values, parameters, count, outputDir)
+        print(helpfile)
 
             
 if __name__ == '__main__':
