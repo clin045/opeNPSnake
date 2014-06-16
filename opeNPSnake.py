@@ -17,7 +17,8 @@ folder = ""             #Folder where logs are located
 
 front_extra = ' data_type="4">'
 back_extra = '</'
-values = []
+
+values, count = [], []
 
 helpfile="""
                ,   .,---.,---.          |         
@@ -66,7 +67,10 @@ def parseFiles():
                     params_temp.append(get_xml_value(line, start_tag, end_tag))
                 if params_temp not in values:
                     values.append(params_temp)
-                    print(params_temp)
+                    count.append(1)
+                else:
+                    index = values.index(params_temp)
+                    count[index] += 1
             inputfile.close()
                     
 def checkFilesForParameters():
@@ -127,10 +131,13 @@ def getCmdOpts():
             
             
 
-
-getCmdOpts()
+folder = 'C:/Users/jeramy.lochner/Desktop/NPSLogFile/'
+checkFilesForParameters()
+getParameters()
+parseFiles()
+#getCmdOpts()
 #checkFilesForParameters()
 #getParameters()
 #parseFiles()
-#htmlReportGen.generate(values, parameters)
+htmlReportGen.generate(values, parameters, count)
 

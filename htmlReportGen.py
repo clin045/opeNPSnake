@@ -11,7 +11,8 @@ def generate(lst,titlelst,count=[]):
     #writes titles as heading
     for title in titlelst:
         report.write('<th>'+title+'</th>\n')
-    report.write('<th>Amount</th>\n')
+    if count != []:
+        report.write('<th>Amount</th>\n')
     report.write('</tr>\n')
     #writes data
     for i in range(0,len(lst)):
