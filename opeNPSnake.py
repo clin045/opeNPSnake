@@ -11,7 +11,7 @@
 import os, sys, getopt
 import htmlReportGen
 
-parameters = []         #Parameters input by users
+parameters = {}      #Parameters and filters input by users
 possible_params = []    #Possible parameters they could input
 
 outputDir, inputDir = '', ''
@@ -20,7 +20,7 @@ front_extra = ' data_type="4">'
 back_extra = '</'
 
 values, count = [], []
-filters = []
+
 
 helpfile="""
                ,   .,---.,---.          |         
@@ -38,7 +38,7 @@ Options:
     -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
     -o Output directory (Defaults to the current working directory)
     -P Prints list of log parameterss
-    -p Select parameters for parsing [-p arg1,arg2,arg3]
+    -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:filter3,arg3]
     -c TODO Specifies config file
 
 Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
@@ -147,18 +147,17 @@ def main():
                 print(param.replace("-", " "))
         #selects parameters for parsing
         elif opt == '-p':
-            global filters
             params = []
             params = arg.split(',')
-            paramlst = []
+            paramlst = {}
             filterlst = []
             for p in params:
-                paramlst.append(p.split(':')[0])
+                filterlst=[]
                 try:
-                    filterlst.append(p.split(':')[1])
+                    filterlst=p.split(':')[1:]
                 except:
                     filterlst.append('')
-            filters = filterlst
+                paramlst[p.split(':')[0]]=filterlst
             getParameters(paramlst)
             parseFiles()
     if outputDir == '':
