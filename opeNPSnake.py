@@ -65,7 +65,12 @@ def parseFiles():
                 for param in parameters:
                     start_tag = param
                     end_tag = back_extra + param
-                    params_temp.append(get_xml_value(line, start_tag, end_tag))
+                    xml_value = get_xml_value(line, start_tag, end_tag)
+                    index = parameters.index(param)
+                    if xml_value == filters[index] or filters[index] == "":
+                        params_temp.append(xml_value)
+                    else:
+                        continue
                 if params_temp not in values:
                     values.append(params_temp)
                     count.append(1)
@@ -92,7 +97,10 @@ def checkFilesForParameters():
                         possible_params.append(param)
                     lastindex+=1
             inputfile.close()
-    
+    if 'Timestamp' in possible_params:
+        possible_params.remove('Timestamp')
+    if 'User-Name' in possible_params:
+        possible_params.remove('User-Name')
     
     
 def getFolderPath(path):
