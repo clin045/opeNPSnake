@@ -2,18 +2,16 @@
 import datetime, os
 
 #this method expects a two-dimensional list containing the data as lst, and a one-dimensional list containing titles as titlelst
-
 def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
+    #make the document pretty (inthefuture)
     
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
     report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
-    #import js library for sortable tables
-    report.write("<head>")
-    report.write('<script src="'+ str(os.getcwd()) + '\\sorttable.js"></script>')
-    report.write("</head>")
-    #css for tables and title
     report.write("""
-    <style>
+                 <head>
+                 <script src="sorttable.js"></script>
+                 </head>
+                 <style>
 h1{
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
     font-size: 30px;
@@ -73,8 +71,11 @@ table tbody tr:hover td
         report.write('</tr>\n')
     report.write('</table>')
     report.close()
-    print("Output to " + folder)
-
+    print("\n\n\t\tOutput to " + folder)
+    
+    
+#for testing purposes
+#generate('C:/Users/jeramy.lochner/Downloads/',[[0,1],[2,3]],['cats','dogs'], [10, 12])
 
 
     
