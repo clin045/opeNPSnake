@@ -2,7 +2,7 @@
 import datetime, os
 
 #this method expects a two-dimensional list containing the data as lst, and a one-dimensional list containing titles as titlelst
-def generate(folder, lst, titlelst, count=[]):
+def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
     #make the document pretty (inthefuture)
     
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
@@ -71,6 +71,7 @@ table tbody tr:hover td
         report.write('</tr>\n')
     report.write('</table>')
     report.close()
+    print("Output to " + folder)
     
     
 #for testing purposes

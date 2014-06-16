@@ -36,7 +36,7 @@ Usage: python opeNPSnake.py -i "filepath" [options]
 Options:
     -h Prints out this help file
     -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
-    -o Output directory (Defaults to the input directory)
+    -o Output directory (Defaults to the current working directory)
     -P Prints list of log parameterss
     -p Select parameters for parsing [-p arg1,arg2,arg3]
     -c TODO Specifies config file
@@ -161,7 +161,10 @@ def main():
             filters = filterlst
             getParameters(paramlst)
             parseFiles()
-    htmlReportGen.generate(outputDir, values, parameters, count)
+    if outputDir == '':
+        htmlReportGen.generate(values, parameters, count)
+    else:
+        htmlReportGen.generate(values, parameters, count, outputDir)
 
             
 if __name__ == '__main__':
