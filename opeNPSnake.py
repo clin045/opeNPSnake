@@ -4,7 +4,7 @@
 #store in list
 #generate report
 
-#test_folder = C:\Users\jeramy.lochner\Desktop\NPSLogFile
+#test_inputDir = C:\Users\jeramy.lochner\Desktop\NPSLogFile
 
 
 
@@ -13,8 +13,9 @@ import htmlReportGen
 
 parameters = []         #Parameters input by users
 possible_params = []    #Possible parameters they could input
-folder = ""             #Folder where logs are located
+inputDir = ""             #Folder where logs are located
 filters = []
+outputDir = ''
 
 front_extra = ' data_type="4">'
 back_extra = '</'
@@ -35,9 +36,9 @@ Usage: python opeNPSnake.py -i "filepath" [options]
 Options:
     -h Prints out this help file
     -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
-    -o Output directory
+    -o Output directory (Defaults to the input directory)
     -P Prints list of log parameterss
-    -p Specifies parameters you want to grab [-p arg1,arg2,arg3]
+    -p Select parameters for parsing [-p arg1,arg2,arg3]
     -c TODO Specifies config file
 
 Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
@@ -55,10 +56,10 @@ def get_xml_value(line, start_tag, end_tag):
 
 
 def parseFiles():
-    for file in os.listdir(folder):
+    for file in os.listdir(inputDir):
         if file.endswith('.log'):
             print("Parsing data from file: " + file)
-            inputfile = open(folder + file)
+            inputfile = open(inputDir + file)
             lines = inputfile.readlines()
             for line in lines:
                 params_temp = []
@@ -82,9 +83,9 @@ def parseFiles():
             inputfile.close()
                     
 def checkFilesForParameters():
-    for file in os.listdir(folder):
+    for file in os.listdir(inputDir):
         if file.endswith('.log'):
-            inputfile = open(folder + file)
+            inputfile = open(inputDir + file)
             lines = inputfile.readlines()
             lastindex = 0
             for line in lines:
@@ -104,11 +105,11 @@ def checkFilesForParameters():
     
     
 def getFolderPath(path):
-    global folder
+    global inputDir
     temp = path.replace('\\', '/')
     if temp[-1:] != "/":
         temp += "/"
-    folder = temp
+    inputDir = temp
     
 
 def getParameters(params):
@@ -122,21 +123,27 @@ def getParameters(params):
     
 def main():
     global filters
+    #get the cmd line options
     try:
         opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:')
     except:
         print(helpfile)
+    #do stuff based on options
     for opt, arg in opts:
+        #print help file
         if opt == '-h':
             print(helpfile)
+        #get input directory
         elif opt == '-i':
             getFolderPath(arg)
         #TODO set output dir
+        #prints out list of parameters
         elif opt == '-P':
             checkFilesForParameters()
             print()
             for param in possible_params:
                 print(param.replace("-", " "))
+        #selects parameters for parsing
         elif opt == '-p':
             global filters
             params = []
@@ -152,7 +159,7 @@ def main():
             filters = filterlst
             getParameters(paramlst)
             parseFiles()
-            htmlReportGen.generate(folder, values, parameters, count)
+    htmlReportGen.generate(inputDir, values, parameters, count)
 
             
 if __name__ == '__main__':

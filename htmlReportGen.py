@@ -8,6 +8,9 @@ def generate(folder, lst, titlelst, count=[]):
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
     report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
     report.write("""
+                 <head>
+                 <script src="sorttable.js"></script>
+                 </head>
                  <style>
 h1{
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
@@ -50,7 +53,7 @@ table tbody tr:hover td
 </style>
 <h1>opeNPSnake</h1>
                  """)
-    report.write('<table>')
+    report.write('<table class="sortable">')
     report.write('<tr>\n')
     #writes titles as heading
     for title in titlelst:
