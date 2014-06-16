@@ -7,11 +7,12 @@ def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
     
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
     report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
+    #Import js library to make tables sort
+    report.write('<head>')
+    report.write('<script src="'+ os.getcwd() + '/sorttable.js"></script>')
+    report.write('</head>')
     report.write("""
-                 <head>
-                 <script src="sorttable.js"></script>
-                 </head>
-                 <style>
+    <style>
 h1{
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
     font-size: 30px;
