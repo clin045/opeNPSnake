@@ -6,7 +6,7 @@
 
 #test_folder = C:\Users\jeramy.lochner\Desktop\NPSLogFile
 
-import os
+import os, sys, getopt
 import htmlReportGen
 
 parameters = []         #Parameters input by users
@@ -16,6 +16,27 @@ folder = ""             #Folder where logs are located
 front_extra = ' data_type="4">'
 back_extra = '</'
 values = []
+
+helpfile="""
+               ,   .,---.,---.          |         
+,---.,---.,---.|\  ||---'`---.,---.,---.|__/ ,---.
+|   ||   ||---'| \ ||        ||   |,---||  \ |---'
+`---'|---'`---'`  `'`    `---'`   '`---^`   ``---'
+     |
+
+Parses NPS logs and generates useful reports
+
+Usage: python opeNPSnake.py -i "filepath" [options]
+
+Options:
+    -h Prints out this help file
+    -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
+    -o Output directory
+    -P Prints list of log parameterss
+    -p specifies parameters you want to grab
+
+     
+"""
 
 
 def get_xml_value(line, start_tag, end_tag):
@@ -47,7 +68,6 @@ def parseFiles():
 def checkFilesForParameters():
     for file in os.listdir(folder):
         if file.endswith('.log'):
-            print("Checking file: " + file + " for possible parameter types")
             inputfile = open(folder + file)
             lines = inputfile.readlines()
             lastindex = 0
@@ -63,19 +83,21 @@ def checkFilesForParameters():
                         possible_params.append(param)
                     lastindex+=1
             inputfile.close()
-    print("\n"*100)
+    for param in possible_params:
+        print("\t" + param)
     
-def getFolderPath():
+    
+def getFolderPath(path):
     global folder
-    temp = input("Enter the folder path where the logs are stored.\n").replace('\\', '/')
+    temp = path.replace('\\', '/')
     if temp[-1:] != "/":
         temp += "/"
     folder = temp
+    print("done")
+    
 
 def getParameters():
     user_input = ""
-    for param in possible_params:
-        print("\t" + param)
     print("\n\n")
     print("Fully-Qualifed-User-Names is not spelled correctly in the logs\nSpell it as it is spelled here\n")
     while user_input != 'done':
@@ -85,12 +107,27 @@ def getParameters():
         elif user_input not in possible_params and user_input != 'done':
             print("That isn't a valid parameter")
     print("\n"*100)
+    
+def getCmdOpts():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],'hi:o:p')
+    except:
+        print(helpfile)
+    for opt, arg in opts:
+        if opt == '-h':
+            print(helpfile)
+        elif opt == '-i':
+            getFolderPath(arg)
+        #TODO set output dir
+        elif opt == '-P':
+            checkFilesForParameters()
+            
+            
 
 
-
-getFolderPath()
-checkFilesForParameters()
-getParameters()
-parseFiles()
-htmlReportGen.generate(values, parameters)
+getCmdOpts()
+#checkFilesForParameters()
+#getParameters()
+#parseFiles()
+#htmlReportGen.generate(values, parameters)
     
