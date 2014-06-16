@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import datetime
+import datetime, os
 
 #this method expects a two-dimensional list containing the data as lst, and a one-dimensional list containing titles as titlelst
 def generate(folder, lst, titlelst, count=[]):
@@ -7,11 +7,11 @@ def generate(folder, lst, titlelst, count=[]):
     
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
     report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
+    report.write("<head>")
+    report.write('<script src="'+ str(os.getcwd()) + '\\sorttable.js"></script>')
+    report.write("</head>")
     report.write("""
-                 <head>
-                 <script src="sorttable.js"></script>
-                 </head>
-                 <style>
+    <style>
 h1{
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
     font-size: 30px;
