@@ -152,10 +152,10 @@ def main():
     global filters
     global outputDir, inputDir
     #get the cmd line options
-    try:
-        opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:c:')
-    except:
-        print(helpfile)
+    #try:
+    opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:c:')
+    #except:
+    #    print(helpfile)
     #do stuff based on options
     for opt, arg in opts:
         #print help file
@@ -207,6 +207,7 @@ def main():
 
     else:
         print(helpfile)
+        print("You did not specify any parameters")
 
             
 if __name__ == '__main__':
