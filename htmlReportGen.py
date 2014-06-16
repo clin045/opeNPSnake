@@ -2,8 +2,8 @@
 import datetime, os
 
 #this method expects a two-dimensional list containing the data as lst, and a one-dimensional list containing titles as titlelst
-def generate(folder, lst, titlelst, count=[]):
- 
+
+def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
     
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
     report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
@@ -73,10 +73,8 @@ table tbody tr:hover td
         report.write('</tr>\n')
     report.write('</table>')
     report.close()
-    
-    
-#for testing purposes
-#generate('C:/Users/jeramy.lochner/Downloads/',[[0,1],[2,3]],['cats','dogs'], [10, 12])
+    print("Output to " + folder)
+
 
 
     

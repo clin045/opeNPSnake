@@ -13,14 +13,14 @@ import htmlReportGen
 
 parameters = []         #Parameters input by users
 possible_params = []    #Possible parameters they could input
-inputDir = ""             #Folder where logs are located
-filters = []
-outputDir = ''
+
+outputDir, inputDir = '', ''
 
 front_extra = ' data_type="4">'
 back_extra = '</'
 
 values, count = [], []
+filters = []
 
 helpfile="""
                ,   .,---.,---.          |         
@@ -36,7 +36,7 @@ Usage: python opeNPSnake.py -i "filepath" [options]
 Options:
     -h Prints out this help file
     -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
-    -o Output directory (Defaults to the input directory)
+    -o Output directory (Defaults to the current working directory)
     -P Prints list of log parameterss
     -p Select parameters for parsing [-p arg1,arg2,arg3]
     -c TODO Specifies config file
@@ -105,11 +105,10 @@ def checkFilesForParameters():
     
     
 def getFolderPath(path):
-    global inputDir
     temp = path.replace('\\', '/')
     if temp[-1:] != "/":
         temp += "/"
-    inputDir = temp
+    return temp
     
 
 def getParameters(params):
@@ -123,6 +122,7 @@ def getParameters(params):
     
 def main():
     global filters
+    global outputDir, inputDir
     #get the cmd line options
     try:
         opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:')
@@ -135,8 +135,10 @@ def main():
             print(helpfile)
         #get input directory
         elif opt == '-i':
-            getFolderPath(arg)
-        #TODO set output dir
+            inputDir = getFolderPath(arg)
+        #get output directory
+        elif opt == '-o':
+            outputDir = getFolderPath(arg)
         #prints out list of parameters
         elif opt == '-P':
             checkFilesForParameters()
@@ -159,7 +161,10 @@ def main():
             filters = filterlst
             getParameters(paramlst)
             parseFiles()
-    htmlReportGen.generate(inputDir, values, parameters, count)
+    if outputDir == '':
+        htmlReportGen.generate(values, parameters, count)
+    else:
+        htmlReportGen.generate(values, parameters, count, outputDir)
 
             
 if __name__ == '__main__':
