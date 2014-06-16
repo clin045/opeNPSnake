@@ -1,9 +1,8 @@
 import os, sys, getopt
 import htmlReportGen
 
-
+parameters = []         #Parameters input by users
 possible_params = []    #Possible parameters they could input
-parameters = {}
 
 outputDir, inputDir = '', ''
 
@@ -11,7 +10,7 @@ front_extra = ' data_type="4">'
 back_extra = '</'
 
 values, count = [], []
-
+filters = []
 
 start_time, end_time = "", ""
 
@@ -31,7 +30,7 @@ Options:
     -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
     -o Output directory (Defaults to the current working directory)
     -P Prints list of log parameterss
-    -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:filter3,arg3]
+    -p Select parameters for parsing [-p arg1,arg2,arg3]
     -c TODO Specifies config file
     -t Specify the time frame [-t "* * * * *,* * * * *"] Minute, Hour, Day, Month, Year
 
@@ -49,33 +48,39 @@ def get_xml_value(line, start_tag, end_tag):
     y = line.find(end_tag)
     return line[x:y]
 
+#Parses the log files
 def parseFiles():
     for file in os.listdir(inputDir):
         if file.endswith('.log'):
             print("Parsing data from file: " + file)
-            inputFile = open(inputDir + file)
-            lines = inputFile.readlines()
+            inputfile = open(inputDir + file)
+            lines = inputfile.readlines()
             for line in lines:
                 params_temp = []
-                broken_filter = False
+                #Variable for if a filter is broken
+                #False = no filters broken and the content should be added to the report
+                broken_filter = False       
                 for param in parameters:
                     start_tag = param
                     end_tag = back_extra + param
                     xml_value = get_xml_value(line, start_tag, end_tag)
-
-                    if xml_value in parameters[param] or len(parameters[param]) <= 0:
+                    index = parameters.index(param)
+                    #Filter checking
+                    if xml_value == filters[index] or filters[index] == "":
                         params_temp.append(xml_value)
                     else:
                         broken_filter = True
+                #Adds it to the content for the report
                 if not broken_filter:
                     if params_temp not in values:
                         values.append(params_temp)
                         count.append(1)
                     else:
                         index = values.index(params_temp)
-                        count[index] += 1
-            inputFile.close()
+                        count[index] += 1 
+            inputfile.close()
 
+#Parses the files for possible parameter types
 def checkFilesForParameters():
     for file in os.listdir(inputDir):
         if file.endswith('.log'):
@@ -96,23 +101,24 @@ def checkFilesForParameters():
             inputfile.close()
     for param in ["Timestamp", "User-Name", "Event"]:
         possible_params.remove(param)
-
+    
 #Returns a reformatted folder path
 def getFolderPath(path):
     temp = path.replace('\\', '/')
     if temp[-1:] != "/":
         temp += "/"
     return temp
-
+    
+#Get the user's parameters
 def getParameters(params):
     checkFilesForParameters()
     for p in params:
-        p = p.lower().replace(' ', '-').title()
+        p = p.lower().replace(' ','-').title()          #Puts it in the format readable by logs
         if p not in parameters and p in possible_params:
-            parameters[p] = params[p]
-        else:
-            print(p + " is not a valid parameter")
-
+            parameters.append(p)
+        elif p not in possible_params:
+            print(p + " isn't a valid parameter")
+    
 def main():
     global filters
     global outputDir, inputDir
@@ -140,17 +146,18 @@ def main():
                 print(param.replace("-", " "))
         #selects parameters for parsing
         elif opt == '-p':
+            global filters
             params = []
             params = arg.split(',')
-            paramlst = {}
+            paramlst = []
             filterlst = []
             for p in params:
-                filterlst=[]
+                paramlst.append(p.split(':')[0])
                 try:
-                    filterlst=p.split(':')[1:]
+                    filterlst.append(p.split(':')[1])
                 except:
                     filterlst.append('')
-                paramlst[p.split(':')[0]]=filterlst
+            filters = filterlst
             getParameters(paramlst)
         #specifies the time frame
         elif opt == '-t':
