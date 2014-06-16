@@ -27,7 +27,7 @@ def generate(folder, lst, titlelst, count=[]):
     
     
 #for testing purposes
-#generate('C:/Users/jeramy.lochner/Downloads/',[[0,1],[2,3]],['cats','dogs'], [10, 12])
+generate('C:/Users/jeramy.lochner/Downloads/',[[0,1],[2,3]],['cats','dogs'], [10, 12])
 
 
     

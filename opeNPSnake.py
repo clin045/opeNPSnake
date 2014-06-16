@@ -62,6 +62,7 @@ def parseFiles():
             lines = inputfile.readlines()
             for line in lines:
                 params_temp = []
+                broken_filter = False
                 for param in parameters:
                     start_tag = param
                     end_tag = back_extra + param
@@ -70,13 +71,14 @@ def parseFiles():
                     if xml_value == filters[index] or filters[index] == "":
                         params_temp.append(xml_value)
                     else:
-                        continue
-                if params_temp not in values:
-                    values.append(params_temp)
-                    count.append(1)
-                else:
-                    index = values.index(params_temp)
-                    count[index] += 1
+                        broken_filter = True
+                if not broken_filter:
+                    if params_temp not in values:
+                        values.append(params_temp)
+                        count.append(1)
+                    else:
+                        index = values.index(params_temp)
+                        count[index] += 1 
             inputfile.close()
                     
 def checkFilesForParameters():
@@ -97,10 +99,8 @@ def checkFilesForParameters():
                         possible_params.append(param)
                     lastindex+=1
             inputfile.close()
-    if 'Timestamp' in possible_params:
-        possible_params.remove('Timestamp')
-    if 'User-Name' in possible_params:
-        possible_params.remove('User-Name')
+    for param in ["Timestamp", "User-Name", "Event"]:
+        possible_params.remove(param)
     
     
 def getFolderPath(path):
@@ -121,6 +121,7 @@ def getParameters(params):
             print(p + " isn't a valid parameter")
     
 def main():
+    global filters
     try:
         opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:')
     except:
@@ -147,14 +148,12 @@ def main():
                     filterlst.append(p.split(':')[1])
                 except:
                     filterlst.append('')
-            filters.append(filterlst)
+            filters = filterlst
             getParameters(paramlst)
+            parseFiles()
+            htmlReportGen.generate(folder, values, parameters, count)
+
             
-
-
-main()
-#checkFilesForParameters()
-#getParameters()
-#parseFiles()
-#htmlReportGen.generate(values, parameters, count)
+if __name__ == '__main__':
+    main()
 
