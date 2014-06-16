@@ -196,7 +196,7 @@ def main():
         elif opt == '-c':
             loadConf(arg)
     #Make sure they specified a -p parameter
-    if len(possible_params) > 0:
+    if len(parameters) > 0:
         parseFiles()
         #Generating the reports
         #If there wasn't a specified outputDir we just use the default(cwd)
