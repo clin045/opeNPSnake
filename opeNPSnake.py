@@ -41,10 +41,6 @@ Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
      
 """
 
-#Converts the time from cron format to MM/DD/YY HH:MM:SS
-def convertTime(time):
-    print(time)
-    
 #Gets the xml values from the logs
 #Expects the line of text from the log, the starting <' '> tag and ending </' '> tag
 def get_xml_value(line, start_tag, end_tag):
@@ -89,7 +85,7 @@ def parseFiles():
                     #Adds one to count if it is
                     else:
                         index = values.index(values_temp)
-                        count[index] += 1
+                        count[index] += 1 
             inputFile.close()
 
 #Parses the files for possible parameter types
@@ -175,6 +171,7 @@ def loadConf(loc):
 def main():
     global filters
     global outputDir, inputDir
+    global start_time, end_time
     #get the cmd line options
     #try:
     opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:c:')
@@ -214,9 +211,7 @@ def main():
         #specifies the time frame
         elif opt == '-t':
             times = arg.split(',')
-            start_time = convertTime(times[0])
-            end_time = convertTime(times[1])
-
+        #Load parameters/filters from a config file
         elif opt == '-c':
             loadConf(arg)
     #Make sure they specified a -p parameter
