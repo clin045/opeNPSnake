@@ -2,10 +2,10 @@
 import datetime
 
 #this method expects a two-dimensional list containing the data as lst, and a one-dimensional list containing titles as titlelst
-def generate(lst,titlelst,count=[]):
+def generate(folder, lst, titlelst, count=[]):
     #make the document pretty (inthefuture)
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
-    report = open(str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
+    report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
     report.write('<table border="1">')
     report.write('<tr>\n')
     #writes titles as heading
@@ -27,7 +27,7 @@ def generate(lst,titlelst,count=[]):
     
     
 #for testing purposes
-#generate([[0,1],[2,3]],['cats','dogs'], [10, 12])
+#generate('C:/Users/jeramy.lochner/Downloads/',[[0,1],[2,3]],['cats','dogs'], [10, 12])
 
 
     
