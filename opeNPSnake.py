@@ -128,12 +128,13 @@ def getCmdOpts():
             for param in possible_params:
                 print(param.replace("-", " "))
         elif opt == '-p':
+
             params = []
             params = arg.split(',')
             getParameters(params)
         
             
-            
+
 
 getCmdOpts()
 #checkFilesForParameters()
