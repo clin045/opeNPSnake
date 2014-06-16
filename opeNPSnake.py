@@ -6,6 +6,9 @@
 
 #test_folder = C:\Users\jeramy.lochner\Desktop\NPSLogFile
 
+
+#THIS IS A TEST COMMENT FOR TESTING PURPOSES
+
 import os, sys, getopt
 import htmlReportGen
 
