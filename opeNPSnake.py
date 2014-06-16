@@ -39,7 +39,7 @@ Options:
     -p Specifies parameters you want to grab
     -c TODO Specifies config file
 
-
+Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
      
 """
 
@@ -91,8 +91,7 @@ def checkFilesForParameters():
                         possible_params.append(param)
                     lastindex+=1
             inputfile.close()
-    for param in possible_params:
-        print("\t" + param.replace("-", " "))
+    
     
     
 def getFolderPath(path):
@@ -103,21 +102,17 @@ def getFolderPath(path):
     folder = temp
     
 
-def getParameters():
-    user_input = ""
-    print("\n\n")
-    print("Fully-Qualifed-User-Names is not spelled correctly in the logs\nSpell it as it is spelled here\n")
-    while user_input != 'Done':
-        user_input = input("Enter a parameter you would like to grab\nType 'done' when done\n\t").lower().replace(" ", "-").title()
-        if user_input not in parameters and user_input in possible_params:
-            parameters.append(user_input)
-        elif user_input not in possible_params and user_input != 'Done':
-            print("That isn't a valid parameter")
-    print("\n"*100)
+def getParameters(params):
+    checkFilesForParameters()
+    for p in params:
+        if p not in parameters and p in possible_params:
+            parameters.append(p)
+        elif p not in possible_params:
+            print(p + " isn't a valid parameter")
     
 def getCmdOpts():
     try:
-        opts, args = getopt.getopt(sys.argv[1:],'hi:o:P')
+        opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:')
     except:
         print(helpfile)
     for opt, arg in opts:
@@ -128,6 +123,10 @@ def getCmdOpts():
         #TODO set output dir
         elif opt == '-P':
             checkFilesForParameters()
+            for param in possible_params:
+                print("\t" + param.replace("-", " "))
+        elif opt == '-p':
+            getParameters(arg)
             
             
 
