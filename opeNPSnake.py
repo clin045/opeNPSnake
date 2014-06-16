@@ -34,7 +34,7 @@ Options:
     -o Output directory (Defaults to the current working directory)
     -P Prints list of log parameterss
     -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:filter3,arg3]
-    -c TODO Specifies config file
+    -c Specifies config file (see sample.conf)
     -t Specify the time frame [-t "* * * * *,* * * * *"] Minute, Hour, Day, Month, Year
 
 Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
@@ -137,6 +137,10 @@ def getParameters(params):
             parameters[p] = params[p]
         else:
             print(p + " is not a valid parameter")
+            
+#loads config file
+def loadConf(loc):
+    print('this is gonna work in the near future')
 
 #Main
 #We should probably split this up but whatever
@@ -145,7 +149,7 @@ def main():
     global outputDir, inputDir
     #get the cmd line options
     try:
-        opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:')
+        opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:c:')
     except:
         print(helpfile)
     #do stuff based on options
@@ -184,7 +188,8 @@ def main():
             times = arg.split(',')
             start_time = convertTime(times[0])
             end_time = convertTime(times[1])
-                
+        elif opt == '-c':
+            loadConf(arg)
             
     parseFiles()
     if outputDir == '':
