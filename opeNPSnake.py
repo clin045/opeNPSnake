@@ -127,8 +127,8 @@ def getCmdOpts():
                 print("\t" + param.replace("-", " "))
         elif opt == '-p':
             getParameters(arg)
-            
-            
+
+
 
 getCmdOpts()
 #checkFilesForParameters()
