@@ -14,6 +14,7 @@ import htmlReportGen
 parameters = []         #Parameters input by users
 possible_params = []    #Possible parameters they could input
 folder = ""             #Folder where logs are located
+filters = []
 
 front_extra = ' data_type="4">'
 back_extra = '</'
@@ -111,7 +112,7 @@ def getParameters(params):
         elif p not in possible_params:
             print(p + " isn't a valid parameter")
     
-def getCmdOpts():
+def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:')
     except:
@@ -128,15 +129,22 @@ def getCmdOpts():
             for param in possible_params:
                 print(param.replace("-", " "))
         elif opt == '-p':
-
             params = []
             params = arg.split(',')
-            getParameters(params)
-        
+            paramlst = []
+            filterlst = []
+            for p in params:
+                paramlst.append(p.split(':')[0])
+                try:
+                    filterlst.append(p.split(':')[1])
+                except:
+                    filterlst.append('')
+            filters.append(filterlst)
+            getParameters(paramlst)
             
 
 
-getCmdOpts()
+main()
 #checkFilesForParameters()
 #getParameters()
 #parseFiles()
