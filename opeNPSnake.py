@@ -81,14 +81,15 @@ def getFolderPath():
 def getParameters():
     user_input = ""
     for param in possible_params:
-        print("\t" + param)
+        print("\t" + param.replace("-", " "))
     print("\n\n")
     print("Fully-Qualifed-User-Names is not spelled correctly in the logs\nSpell it as it is spelled here\n")
-    while user_input != 'done':
-        user_input = input("Enter a parameter you would like to grab\nType 'done' when done\n\t")
+    while user_input != 'Done':
+        user_input = input("Enter a parameter you would like to grab\nType 'done' when done\n\t").lower().replace(" ", "-").title()
+        print(user_input)
         if user_input not in parameters and user_input in possible_params:
             parameters.append(user_input)
-        elif user_input not in possible_params and user_input != 'done':
+        elif user_input not in possible_params and user_input != 'Done':
             print("That isn't a valid parameter")
     print("\n"*100)
 
