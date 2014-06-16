@@ -106,6 +106,7 @@ def getFolderPath(path):
 
 def getParameters(params):
     checkFilesForParameters()
+    global parameters
     for p in params:
         p = p.lower().replace(' ', '-').title()
         if p not in parameters and p in possible_params:
@@ -151,6 +152,7 @@ def main():
                 except:
                     filterlst.append('')
                 paramlst[p.split(':')[0]]=filterlst
+            print(paramlst)
             getParameters(paramlst)
         #specifies the time frame
         elif opt == '-t':
