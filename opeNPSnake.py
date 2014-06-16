@@ -6,6 +6,9 @@
 
 #test_folder = C:\Users\jeramy.lochner\Desktop\NPSLogFile
 
+
+#THIS IS A TEST COMMENT FOR TESTING PURPOSES
+
 import os, sys, getopt
 import htmlReportGen
 
@@ -129,6 +132,9 @@ getCmdOpts()
 #getParameters()
 #parseFiles()
 #htmlReportGen.generate(values, parameters)
+<<<<<<< HEAD
 
 
 #This is my test comment. I think this shouldnt break but if it does ill be sad
+=======
+>>>>>>> origin/master
