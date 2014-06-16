@@ -72,7 +72,7 @@ table tbody tr:hover td
         report.write('</tr>\n')
     report.write('</table>')
     report.close()
-    print("\n\n\t\tOutput to " + folder)
+    print("\n\nOutput to " + folder)
     
     
 #for testing purposes

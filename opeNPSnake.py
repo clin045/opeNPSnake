@@ -160,10 +160,8 @@ def loadConf(loc):
 
                 paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
         if o == 'input':
-            print(c.get(section,o))
             inputDir = getFolderPath(c.get(section,o))
         if o == 'output':
-            print(c.get(section,o))
             outputDir = getFolderPath(c.get(section,o))
     getParameters(paramlst)
 #Main
