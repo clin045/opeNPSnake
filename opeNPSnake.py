@@ -36,7 +36,7 @@ Options:
     -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
     -o Output directory
     -P Prints list of log parameterss
-    -p Specifies parameters you want to grab
+    -p Specifies parameters you want to grab [-p arg1,arg2,arg3]
     -c TODO Specifies config file
 
 Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
@@ -105,6 +105,7 @@ def getFolderPath(path):
 def getParameters(params):
     checkFilesForParameters()
     for p in params:
+        p = p.lower().replace(' ','-').title()
         if p not in parameters and p in possible_params:
             parameters.append(p)
         elif p not in possible_params:
@@ -123,10 +124,14 @@ def getCmdOpts():
         #TODO set output dir
         elif opt == '-P':
             checkFilesForParameters()
+            print()
             for param in possible_params:
-                print("\t" + param.replace("-", " "))
+                print(param.replace("-", " "))
         elif opt == '-p':
-            getParameters(arg)
+            params = []
+            params = arg.split(',')
+            getParameters(params)
+        
             
             
 
