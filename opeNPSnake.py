@@ -140,12 +140,12 @@ def getParameters(params):
             
 #loads config file
 def loadConf(loc):
+    global inputDir,outputDir
     loc = loc.replace('\\', '/')
     c = configparser.ConfigParser()
     c.read(loc)
     section='Config'
     options=c.options(section)
-    global inputDir,outputDir
     paramlst = {}
     for o in options:
         if o == 'parameters':
@@ -197,6 +197,8 @@ def main():
         elif opt == '-p':
             params = arg.split(',')
             for p in params:
+                if p[0] == " ":
+                    p = p[1:]
                 filterlst=[]
                 try:
                     filterlst=p.split(':')[1:]
@@ -223,10 +225,9 @@ def main():
         else:
             htmlReportGen.generate(values, parameters, count, outputDir)
 
-    else:
+    elif ('-P', '') not in opts:
         print(helpfile)
         print("You did not specify any parameters")
-
             
 if __name__ == '__main__':
     main()
