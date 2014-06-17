@@ -21,7 +21,7 @@ def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
                 report.write('<th>'+title+'</th>\n')
         elif line == '%AMOUNT%':
             if count != []:
-                report.write('<th>Amount</th>\n')
+                report.write('<th># of Events</th>\n')
         elif line == '%VALUES%':
             #writes data
             for i in range(0,len(lst)):

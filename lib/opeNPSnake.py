@@ -12,6 +12,12 @@ values, count = [], []          #Values holds the lines in the report
 
 start_time, end_time = "", ""   #Start and end time frames given by user
 
+
+#0 = html
+#1 = csv
+#2 = tsv
+outputFormat = 0
+
 #When -h is called or the user doesn't do something right
 helpfile="""
                ,   .,---.,---.          |         
@@ -31,7 +37,10 @@ Options:
     -P Prints list of log parameterss
     -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:filter3,arg3]
     -c Specifies config file (see sample.conf)
-    -t Specify the time frame [-t "* * * * *,* * * * *"] Year, Month, Day, Hour, Minute
+    -t Specify the time frame [-t "* * * * *,* * * * *"] Year, Month, Day, Hour, Minute. * is a wildcard.
+    -H Generates output as a pretty HTML document (default)
+    -C Generates output as a CSV file
+    -T Generates output as a TSV file
 
 Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
      
@@ -86,11 +95,12 @@ def loadConf(loc):
 #Main
 #We should probably split this up but whatever
 def main():
+    global outputFormat
     global filters
     global outputDir, inputDir
     global start_time, end_time
     #get the cmd line options
-    opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:c:')
+    opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:c:HCT')
     #Run the right commands based on cmd options
     for opt, arg in opts:
         paramlst = {}
@@ -117,10 +127,17 @@ def main():
             parameters['Timestamp']=''
             global start_time,end_time
             start_time,end_time=arg.split(',')[0].split(' '),arg.split(',')[1].split(' ')
-            
         #Load parameters/filters from a config file
         elif opt == '-c':
             loadConf(arg)
+        #Generates HTML report
+        elif opt == '-H':
+            outputFormat=0
+        elif opt == '-C':
+            outputFormat=1
+        elif opt == '-T':
+            outputFormat=2
+            
     #Make sure they specified a -p parameter
     getParameters(paramlst)
     if len(parameters) > 0:
@@ -148,11 +165,23 @@ def main():
             values = temp
                 
         #Generating the reports
-        #If there wasn't a specified outputDir we just use the default(cwd)
-        if outputDir == '':
-            htmlReportGen.generate(values, parameters, count)
-        else:
-            htmlReportGen.generate(values, parameters, count, outputDir)
+        
+        if outputFormat == 0:
+            #If there wasn't a specified outputDir we just use the default(cwd)
+            if outputDir == '':
+                htmlReportGen.generate(values, parameters, count)
+            else:
+                htmlReportGen.generate(values, parameters, count, outputDir)
+        if outputFormat == 1:
+            if outputDir == '':
+                helperFunctions.genCsv(values,parameters,count)
+            else:
+                helperFunctions.genCsv(values,parameters,count,outputDir)
+        if outputFormat == 2:
+            if outputDir == '':
+                helperFunctions.genTsv(values,parameters,count)
+            else:
+                helperFunctions.genTsv(values,parameters,count,outputDir)
 
     elif ('-P', '') not in opts:
         print(helpfile)

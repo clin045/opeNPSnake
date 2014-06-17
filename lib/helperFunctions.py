@@ -1,5 +1,5 @@
 import datetime
-
+import os
 #Returns a reformatted folder path
 def getFolderPath(path):
     #Replace the \ slashes with / so we don't get unicode errors
@@ -61,3 +61,36 @@ def checkDateinRange(start, end, check):
         return True
     else:
         return False
+    
+def genCsv(values, parameters, count=[], folder=os.getcwd()+'/'):
+    report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.csv','w')
+    for p in parameters:
+        report.write(p+',')
+        if count != []:
+            report.write('# of Events')
+    report.write('\n')
+    print(count)
+    for v in values:
+        for i in range(0,len(v)):
+            report.write(v[i]+',')
+            if count != []:
+                report.write(str(count[values.index(v)]))
+        report.write('\n')
+    print("\n\nOutput to " + folder)
+    
+def genTsv(values, parameters, count=[], folder=os.getcwd()+'/'):
+    report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.tsv','w')
+    for p in parameters:
+        report.write(p+'\t')
+        if count != []:
+            report.write('# of Events')
+    report.write('\n')
+    print(count)
+    for v in values:
+        for i in range(0,len(v)):
+            report.write(v[i]+'\t')
+            if count != []:
+                report.write(str(count[values.index(v)]))
+        report.write('\n')
+    print("\n\nOutput to " + folder)
+    
