@@ -86,6 +86,7 @@ def parseFiles():
                     else:
                         index = values.index(values_temp)
                         count[index] += 1 
+            print(values)
             inputFile.close()
 
 #Parses the files for possible parameter types
@@ -152,6 +153,7 @@ def getFilters(arg):
             filterlst.append('')
 
         paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
+    print(paramlst)
     return paramlst
 
 #loads config file
@@ -241,15 +243,15 @@ def main():
     if len(parameters) > 0:
         parseFiles()
         ordParameters = OrderedDict(parameters)
+        print(ordParameters)
         #stupid way to check if -t
         if 'Timestamp' in ordParameters:
             ordParameters.move_to_end("Timestamp")
             #take out everything except events in specified time range
             for v in values:
-                date = v[0]
                 print(v)
-                dt = datetime.datetime(datetime.datetime(int(date.split('/')[2]),int(date.split('/')[1]),int(date.split('/')[0]),int(time.split(':')[0]),int(time.split(':')[1])))
-                print(dt)
+                date = v[parameters.]
+                dt = datetime.datetime(int(date.split('/')[2].split(" ")[0]),int(date.split('/')[0]),int(date.split('/')[1]),int(date.split(' ')[1].split(':')[0]),int(date.split(':')[1]))
         #Generating the reports
         #If there wasn't a specified outputDir we just use the default(cwd)
         if outputDir == '':
