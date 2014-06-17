@@ -1,5 +1,5 @@
 import os, sys, getopt, configparser, datetime
-import htmlReportGen, fileParser
+import htmlReportGen, fileParser, helperFunctions
 
 possible_params = []            #Possible parameters they could input
 parameters = {}                 #Dictionary that holds the parameters:their filters
@@ -36,14 +36,6 @@ Options:
 Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
      
 """
-#Returns a reformatted folder path
-def getFolderPath(path):
-    #Replace the \ slashes with / so we don't get unicode errors
-    temp = path.replace('\\', '/')
-    #Add a / to the end if there isn't one
-    if temp[-1:] != "/":
-        temp += "/"
-    return temp
 
 #Checks the parameters that the user specified and drops the ones that
 #Aren't in the logs
@@ -86,32 +78,10 @@ def loadConf(loc):
             arg = c.get(section,o)
             paramlst = getFilters(arg)
         if o == 'input':
-            inputDir = getFolderPath(c.get(section,o))
+            inputDir = helperFunctions.getFolderPath(c.get(section,o))
         if o == 'output':
-            outputDir = getFolderPath(c.get(section,o))
+            outputDir = helperFunctions.getFolderPath(c.get(section,o))
     getParameters(paramlst)
-
-#convert user supplied date to correct format
-def convertDate(times):
-    time_start_split = times[0].split(' ')
-    time_start_parsed=[]
-    for s in time_start_split:
-        if s == '*':
-            s = 1
-        else:
-            s = int(s)
-        time_start_parsed.append(s)
-    temp_start = datetime.datetime(time_start_parsed[0], time_start_parsed[1], time_start_parsed[2], time_start_parsed[3], time_start_parsed[4])
-    time_end_split = times[1].split(' ')
-    time_end_parsed=[]
-    for s in time_end_split:
-        if s == '*':
-            s = 1
-        else:
-            s = int(s)
-        time_end_parsed.append(s)
-    temp_end = datetime.datetime(time_end_parsed[0], time_end_parsed[1], time_end_parsed[2], time_end_parsed[3], time_end_parsed[4])
-    return temp_start,temp_end
 
 #Main
 #We should probably split this up but whatever
@@ -132,10 +102,10 @@ def main():
             print(helpfile)
         #get input directory
         elif opt == '-i':
-            inputDir = getFolderPath(arg)
+            inputDir = helperFunctions.getFolderPath(arg)
         #get output directory
         elif opt == '-o':
-            outputDir = getFolderPath(arg)
+            outputDir = helperFunctions.getFolderPath(arg)
         #prints out list of parameters
         elif opt == '-P':
             possible_params = fileParser.checkFilesForParameters(inputDir)
@@ -150,7 +120,7 @@ def main():
             times = arg.split(',')
             parameters['Timestamp']=''
             global start_time,end_time
-            start_time,end_time=convertDate(times)
+            start_time,end_time=helperFunctions.convertDate(times)
             
         #Load parameters/filters from a config file
         elif opt == '-c':
