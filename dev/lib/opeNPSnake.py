@@ -135,6 +135,9 @@ def main():
                 if helperFunctions.checkDateinRange(start_time,end_time,dt):
                     tempv.append(v)
             values=tempv
+            for v in values:
+                v.remove(v[list(parameters.keys()).index("Timestamp")])
+            del(parameters['Timestamp'])
                 
         #Generating the reports
         #If there wasn't a specified outputDir we just use the default(cwd)
