@@ -3,7 +3,7 @@ import datetime, os
 
 #this method expects a two-dimensional list containing the data as lst, and a one-dimensional list containing titles as titlelst
 def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
-    #make the document pretty (inthefuture)
+
     
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
     report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
@@ -11,6 +11,7 @@ def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
     report.write('<head>')
     report.write('<script src="'+ os.getcwd() + '/sorttable.js"></script>')
     report.write('</head>')
+    #make stuff pretty
     report.write("""
     <style>
 h1{
@@ -60,7 +61,7 @@ table tbody tr:hover td
     for title in titlelst:
         report.write('<th>'+title+'</th>\n')
     if count != []:
-        report.write('<th>Amount</th>\n')
+        report.write('<th># of Events</th>\n')
     report.write('</tr>\n')
     #writes data
     for i in range(0,len(lst)):

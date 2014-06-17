@@ -1,4 +1,4 @@
-import os, sys, getopt, configparser
+import os, sys, getopt, configparser, datetime
 import htmlReportGen
 
 
@@ -35,7 +35,7 @@ Options:
     -P Prints list of log parameterss
     -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:filter3,arg3]
     -c Specifies config file (see sample.conf)
-    -t Specify the time frame [-t "* * * * *,* * * * *"] Minute, Hour, Day, Month, Year
+    -t Specify the time frame [-t "* * * * *,* * * * *"] Year, Month, Day, Hour, Minute
 
 Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
      
@@ -164,6 +164,28 @@ def loadConf(loc):
         if o == 'output':
             outputDir = getFolderPath(c.get(section,o))
     getParameters(paramlst)
+
+#convert user supplied date to correct format
+def convertDate(times):
+    time_start_split = times[0].split(' ')
+    time_start_parsed=[]
+    for s in time_start_split:
+        if s == '*':
+            s = 1
+        else:
+            s = int(s)
+        time_start_parsed.append(s)
+    temp_start = datetime.datetime(time_start_parsed[0], time_start_parsed[1], time_start_parsed[2], time_start_parsed[3], time_start_parsed[4])
+    time_end_split = times[1].split(' ')
+    time_end_parsed=[]
+    for s in time_end_split:
+        if s == '*':
+            s = 1
+        else:
+            s = int(s)
+        time_end_parsed.append(s)
+    temp_end = datetime.datetime(time_end_parsed[0], time_end_parsed[1], time_end_parsed[2], time_end_parsed[3], time_end_parsed[4])
+    return temp_start,temp_end
 #Main
 #We should probably split this up but whatever
 def main():
@@ -209,6 +231,10 @@ def main():
         #specifies the time frame
         elif opt == '-t':
             times = arg.split(',')
+            parameters['Timestamp']=''
+            global start_time,end_time
+            start_time,end_time=convertDate(times)
+            
         #Load parameters/filters from a config file
         elif opt == '-c':
             loadConf(arg)
@@ -216,6 +242,14 @@ def main():
     getParameters(paramlst)
     if len(parameters) > 0:
         parseFiles()
+        #stupid way to check if -t
+        if 'Timestamp' in parameters:
+            #take out everything except events in specified time range
+            for v in values:
+                date = v[0]
+                print(v)
+                dt = datetime.datetime(datetime.datetime(int(date.split('/')[2]),int(date.split('/')[1]),int(date.split('/')[0]),int(time.split(':')[0]),int(time.split(':')[1])))
+                print(dt)
         #Generating the reports
         #If there wasn't a specified outputDir we just use the default(cwd)
         if outputDir == '':
