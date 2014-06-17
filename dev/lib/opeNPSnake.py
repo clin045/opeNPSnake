@@ -117,10 +117,9 @@ def main():
             getParameters(paramlst)
         #specifies the time frame
         elif opt == '-t':
-            times = arg.split(',')
             parameters['Timestamp']=''
             global start_time,end_time
-            start_time,end_time=helperFunctions.convertDate(times)
+            start_time,end_time=arg.split(',')[0].split(' '),arg.split(',')[1].split(' ')
             
         #Load parameters/filters from a config file
         elif opt == '-c':
