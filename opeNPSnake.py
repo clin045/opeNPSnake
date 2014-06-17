@@ -70,7 +70,6 @@ def getFilters(arg):
             filterlst.append('')
 
         paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
-    print(paramlst)
     return paramlst
 
 #loads config file
@@ -145,6 +144,7 @@ def main():
         #selects parameters for parsing
         elif opt == '-p':
             paramlst = getFilters(arg)
+            getParameters(paramlst)
         #specifies the time frame
         elif opt == '-t':
             times = arg.split(',')
@@ -163,7 +163,6 @@ def main():
         if 'Timestamp' in parameters:
             #take out everything except events in specified time range
             for v in values:
-                print(v)
                 date = v[list(parameters.keys()).index("Timestamp")]
                 dt = datetime.datetime(int(date.split('/')[2].split(" ")[0]),int(date.split('/')[0]),int(date.split('/')[1]),int(date.split(' ')[1].split(':')[0]),int(date.split(':')[1]))
         #Generating the reports
