@@ -162,9 +162,15 @@ def main():
         #stupid way to check if -t
         if 'Timestamp' in parameters:
             #take out everything except events in specified time range
+            tempv = []
             for v in values:
                 date = v[list(parameters.keys()).index("Timestamp")]
                 dt = datetime.datetime(int(date.split('/')[2].split(" ")[0]),int(date.split('/')[0]),int(date.split('/')[1]),int(date.split(' ')[1].split(':')[0]),int(date.split(':')[1]))
+                if start_time <= dt <= end_time:
+                    print('valid')
+                    tempv.append(v)
+            values=tempv
+            
         #Generating the reports
         #If there wasn't a specified outputDir we just use the default(cwd)
         if outputDir == '':
