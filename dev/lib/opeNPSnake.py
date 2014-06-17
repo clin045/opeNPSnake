@@ -45,7 +45,7 @@ def getParameters(params):
     for p in params:
         if p not in parameters and p in possible_params:
             parameters[p] = params[p]
-        else:
+        elif p not in possible_params:
             print(p + " is not a valid parameter")
 
 #Returns a dictionary {key:value} = {parameter:[filter1, filter2, etc]}            
@@ -90,11 +90,8 @@ def main():
     global outputDir, inputDir
     global start_time, end_time
     #get the cmd line options
-    #try:
     opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:c:')
-    #except:
-    #    print(helpfile)
-    #do stuff based on options
+    #Run the right commands based on cmd options
     for opt, arg in opts:
         paramlst = {}
         #print help file
@@ -106,7 +103,7 @@ def main():
         #get output directory
         elif opt == '-o':
             outputDir = helperFunctions.getFolderPath(arg)
-        #prints out list of parameters
+        #prints out list of possible parameters
         elif opt == '-P':
             possible_params = fileParser.checkFilesForParameters(inputDir)
             for param in possible_params:
