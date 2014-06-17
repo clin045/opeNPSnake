@@ -250,7 +250,7 @@ def main():
             #take out everything except events in specified time range
             for v in values:
                 print(v)
-                date = v[parameters.]
+                date = v[list(parameters.keys()).index("Timestamp")]
                 dt = datetime.datetime(int(date.split('/')[2].split(" ")[0]),int(date.split('/')[0]),int(date.split('/')[1]),int(date.split(' ')[1].split(':')[0]),int(date.split(':')[1]))
         #Generating the reports
         #If there wasn't a specified outputDir we just use the default(cwd)
