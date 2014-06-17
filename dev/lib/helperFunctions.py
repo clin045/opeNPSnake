@@ -6,3 +6,5 @@ def getFolderPath(path):
     if temp[-1:] != "/":
         temp += "/"
     return temp
+def checkDateinRange(start, end, check):
+    print("placeholder")
