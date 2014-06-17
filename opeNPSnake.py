@@ -166,7 +166,7 @@ def loadConf(loc):
     for o in options:
         if o == 'parameters':
             arg = c.get(section,o)
-            paramlst = splitFilters(arg)
+            paramlst = getFilters(arg)
         if o == 'input':
             inputDir = getFolderPath(c.get(section,o))
         if o == 'output':
@@ -225,7 +225,7 @@ def main():
                 print(param.replace("-", " "))
         #selects parameters for parsing
         elif opt == '-p':
-            paramlst = splitFilters(arg)
+            paramlst = getFilters(arg)
         #specifies the time frame
         elif opt == '-t':
             times = arg.split(',')
