@@ -137,7 +137,23 @@ def getParameters(params):
             parameters[p] = params[p]
         else:
             print(p + " is not a valid parameter")
-            
+
+#Returns a dictionary {key:value} = {parameter:[filter1, filter2, etc]}            
+def getFilters(arg):
+    params = arg.split(',')
+    paramlst = {}
+    for p in params:
+        if p[0] == " ":
+            p = p[1:]
+        filterlst=[]
+        try:
+            filterlst=p.split(':')[1:]
+        except:
+            filterlst.append('')
+
+        paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
+    return paramlst
+
 #loads config file
 def loadConf(loc):
     global inputDir,outputDir
@@ -150,20 +166,13 @@ def loadConf(loc):
     for o in options:
         if o == 'parameters':
             arg = c.get(section,o)
-            params = arg.split(',')
-            for p in params:
-                filterlst=[]
-                try:
-                    filterlst=p.split(':')[1:]
-                except:
-                    filterlst.append('')
-
-                paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
+            paramlst = splitFilters(arg)
         if o == 'input':
             inputDir = getFolderPath(c.get(section,o))
         if o == 'output':
             outputDir = getFolderPath(c.get(section,o))
     getParameters(paramlst)
+    
 #Main
 #We should probably split this up but whatever
 def main():
@@ -190,24 +199,11 @@ def main():
         #prints out list of parameters
         elif opt == '-P':
             checkFilesForParameters()
-            print()
             for param in possible_params:
                 print(param.replace("-", " "))
         #selects parameters for parsing
         elif opt == '-p':
-            params = arg.split(',')
-            for p in params:
-                if p[0] == " ":
-                    p = p[1:]
-                filterlst=[]
-                try:
-                    filterlst=p.split(':')[1:]
-                except:
-                    filterlst.append('')
-
-                paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
-
-            
+            paramlst = splitFilters(arg)
         #specifies the time frame
         elif opt == '-t':
             times = arg.split(',')

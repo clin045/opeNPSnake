@@ -13,7 +13,6 @@ def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
         line= line.strip()
         if (line[:1] != '%'):
             report.write(line)
-        print(line)
         if line == '%SORTTABLE%':
             report.write('<script src="'+ os.getcwd() + '/sorttable.js"></script>')
         elif line == '%TITLES%':
