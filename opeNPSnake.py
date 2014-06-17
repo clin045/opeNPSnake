@@ -1,6 +1,6 @@
 import os, sys, getopt, configparser, datetime
 import htmlReportGen
-
+from collections import OrderedDict
 
 possible_params = []            #Possible parameters they could input
 parameters = {}                 #Dictionary that holds the parameters:their filters
@@ -240,8 +240,10 @@ def main():
     getParameters(paramlst)
     if len(parameters) > 0:
         parseFiles()
+        ordParameters = OrderedDict(parameters)
         #stupid way to check if -t
-        if 'Timestamp' in parameters:
+        if 'Timestamp' in ordParameters:
+            ordParameters.move_to_end("Timestamp")
             #take out everything except events in specified time range
             for v in values:
                 date = v[0]
@@ -251,9 +253,9 @@ def main():
         #Generating the reports
         #If there wasn't a specified outputDir we just use the default(cwd)
         if outputDir == '':
-            htmlReportGen.generate(values, parameters, count)
+            htmlReportGen.generate(values, ordParameters, count)
         else:
-            htmlReportGen.generate(values, parameters, count, outputDir)
+            htmlReportGen.generate(values, ordParameters, count, outputDir)
 
     elif ('-P', '') not in opts:
         print(helpfile)
