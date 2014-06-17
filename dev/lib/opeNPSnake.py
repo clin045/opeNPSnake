@@ -138,6 +138,15 @@ def main():
             for v in values:
                 v.remove(v[list(parameters.keys()).index("Timestamp")])
             del(parameters['Timestamp'])
+            temp = []
+            for v in values:
+                if v in temp:
+                    count[temp.index(v)] += 1
+                else:
+                    temp.append(v)
+                    count.append(1)
+            print(temp)
+            values = temp
                 
         #Generating the reports
         #If there wasn't a specified outputDir we just use the default(cwd)
