@@ -145,7 +145,6 @@ def main():
                 else:
                     temp.append(v)
                     count.append(1)
-            print(temp)
             values = temp
                 
         #Generating the reports
