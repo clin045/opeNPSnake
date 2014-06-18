@@ -3,6 +3,7 @@ opeNPSnake
 
 Parses NPS logs and generates useful reports
 
+Winner of the Lochner Foundation Software of the Year Award (TM)
 Usage
 =====
 Invoke opeNPSnake from the command line:
