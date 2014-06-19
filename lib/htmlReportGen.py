@@ -6,7 +6,7 @@ def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
 
     
     #hideous code to create the html report file with the prefix in the format of year month day hour minute
-    report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.html','w')
+    report = open(folder + str(datetime.datetime.today()).replace(':','').replace(' ','-')[0:15]+'report.html','w')
     template = open(os.getcwd()+'/template.html', 'r')
     #Import js library to make tables sort
 
