@@ -1,2 +1,0 @@
-Parsing data from file: IN140611.log
-Parsing data from file: IN140612.log

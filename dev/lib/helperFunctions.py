@@ -93,4 +93,3 @@ def genTsv(values, parameters, count=[], folder=os.getcwd()+'/'):
                 report.write(str(count[values.index(v)]))
         report.write('\n')
     print("\n\nOutput to " + folder)
-    

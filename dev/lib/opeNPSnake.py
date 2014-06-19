@@ -139,7 +139,8 @@ def main():
             outputFormat=2
             
     #Make sure they specified a -p parameter
-    getParameters(paramlst)
+    if ('-h', '') not in opts:
+        getParameters(paramlst)
     if len(parameters) > 0:
         values, count = fileParser.parseFiles(inputDir, parameters)
         #stupid way to check if -t
@@ -183,7 +184,7 @@ def main():
             else:
                 helperFunctions.genTsv(values,parameters,count,outputDir)
 
-    elif ('-P', '') not in opts:
+    elif ('-P', '') not in opts and ('-h', '') not in opts:
         print(helpfile)
         print("You did not specify any parameters")
             
