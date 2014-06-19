@@ -46,6 +46,8 @@ def parseFiles(inputDir, parameters):
                                 values_temp.append(xml_value)
                     if len(parameters[param]) <= 0:
                         values_temp.append(xml_value)
+                if len(values_temp) < len(parameters):
+                    broken_filter = True
                 if not broken_filter:
                     #Checks to see if this is a duplicate line
                     if values_temp not in values:
