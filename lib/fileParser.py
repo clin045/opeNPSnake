@@ -36,10 +36,18 @@ def parseFiles(inputDir, parameters):
                     #temp storage for the values
                     xml_value = get_xml_value(line, start_tag, end_tag)
                     #Checks to see if it gets passed the filter or there is no filter
-                    if xml_value in parameters[param] or len(parameters[param]) <= 0:
+                    for filt in parameters[param]:
+                        if filt == xml_value:
+                            values_temp.append(xml_value)
+                        if filt[:1] == '!':
+                            if filt[1:] == xml_value:
+                                broken_filter = True
+                            elif filt[1:] != xml_value:
+                                values_temp.append(xml_value)
+                    if len(parameters[param]) <= 0:
                         values_temp.append(xml_value)
-                    else:
-                        broken_filter = True
+                if len(values_temp) < len(parameters):
+                    broken_filter = True
                 if not broken_filter:
                     #Checks to see if this is a duplicate line
                     if values_temp not in values:

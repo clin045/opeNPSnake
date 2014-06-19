@@ -12,11 +12,7 @@ values, count = [], []          #Values holds the lines in the report
 
 start_time, end_time = "", ""   #Start and end time frames given by user
 
-
-#0 = html
-#1 = csv
-#2 = tsv
-outputFormat = 0
+outputFormat = 'html'
 
 #When -h is called or the user doesn't do something right
 helpfile="""
@@ -35,14 +31,12 @@ Options:
     -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
     -o Output directory (Defaults to the current working directory)
     -P Prints list of log parameterss
-    -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:filter3,arg3]
+    -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:!filter3,arg3] You can exclude results by prepending a filter with !
     -c Specifies config file (see sample.conf)
     -t Specify the time frame [-t "* * * * *,* * * * *"] Year, Month, Day, Hour, Minute. * is a wildcard.
     -H Generates output as a pretty HTML document (default)
     -C Generates output as a CSV file
     -T Generates output as a TSV file
-
-Note: Fully-Qualifed-User-Names is not spelled correctly in the logs.
      
 """
 
@@ -75,7 +69,7 @@ def getFilters(arg):
 
 #loads config file
 def loadConf(loc):
-    global inputDir,outputDir
+    global inputDir,outputDir,outputFormat
     loc = loc.replace('\\', '/')
     c = configparser.ConfigParser()
     c.read(loc)
@@ -90,6 +84,20 @@ def loadConf(loc):
             inputDir = helperFunctions.getFolderPath(c.get(section,o))
         if o == 'output':
             outputDir = helperFunctions.getFolderPath(c.get(section,o))
+        if o == 'timeframe':
+            parameters['Timestamp']=''
+            arg = c.get(section,o)
+            global start_time,end_time
+            start_time,end_time=arg.split(',')[0].split(' '),arg.split(',')[1].split(' ')
+        if o == 'outputformat':
+            arg = c.get(section,o)
+            if arg=='H':
+                outputFormat=0
+            elif arg=='C':
+                outputFormat=1
+            elif arg=='T':
+                outputFormat=2
+
     getParameters(paramlst)
 
 #Main
@@ -132,14 +140,15 @@ def main():
             loadConf(arg)
         #Generates HTML report
         elif opt == '-H':
-            outputFormat=0
+            outputFormat='html'
         elif opt == '-C':
-            outputFormat=1
+            outputFormat='csv'
         elif opt == '-T':
-            outputFormat=2
+            outputFormat='tsv'
             
     #Make sure they specified a -p parameter
-    getParameters(paramlst)
+    if ('-h', '') not in opts:
+        getParameters(paramlst)
     if len(parameters) > 0:
         values, count = fileParser.parseFiles(inputDir, parameters)
         #stupid way to check if -t
@@ -166,24 +175,24 @@ def main():
                 
         #Generating the reports
         
-        if outputFormat == 0:
+        if outputFormat == 'html':
             #If there wasn't a specified outputDir we just use the default(cwd)
             if outputDir == '':
                 htmlReportGen.generate(values, parameters, count)
             else:
                 htmlReportGen.generate(values, parameters, count, outputDir)
-        if outputFormat == 1:
+        if outputFormat == 'csv':
             if outputDir == '':
                 helperFunctions.genCsv(values,parameters,count)
             else:
                 helperFunctions.genCsv(values,parameters,count,outputDir)
-        if outputFormat == 2:
+        if outputFormat == 'tsv':
             if outputDir == '':
                 helperFunctions.genTsv(values,parameters,count)
             else:
                 helperFunctions.genTsv(values,parameters,count,outputDir)
 
-    elif ('-P', '') not in opts:
+    elif ('-P', '') not in opts and ('-h', '') not in opts:
         print(helpfile)
         print("You did not specify any parameters")
             

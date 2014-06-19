@@ -16,6 +16,8 @@ def generate(lst, titlelst, count=[], folder=os.getcwd()+'/'):
             report.write(line)
         if line == '%SORTTABLE%':
             report.write('<script src="'+ os.getcwd() + '/sorttable.js"></script>')
+        elif line == '%CODELIST%':
+            report.write('<a href="'+ os.getcwd() + '/reasoncodes.html" target="_blank">Reason Codes</a>')
         elif line == '%TITLES%':
             for title in titlelst:
                 report.write('<th>'+title+'</th>\n')
