@@ -13,49 +13,20 @@ def getFolderPath(path):
 def checkDateinRange(start, end, check):
     #make a new datetime object with the given parameters, replacing * with the parameters of check
     temp_test_start=[]
-    if start[0]=='*':
-        temp_test_start.append(check.year)
-    else:
-        temp_test_start.append(int(start[0]))
-    if start[1]=='*':
-        temp_test_start.append(check.month)
-    else:
-        temp_test_start.append(int(start[1]))
-    if start[2]=='*':
-        temp_test_start.append(check.day)
-    else:
-        temp_test_start.append(int(start[2]))
-    if start[3]=='*':
-        temp_test_start.append(check.hour)
-    else:
-        temp_test_start.append(int(start[3]))
-    if start[4]=='*':
-        temp_test_start.append(check.minute)
-    else:
-        temp_test_start.append(int(start[4]))
+    check_list = [check.year, check.month, check.day, check.hour, check.minute]
+    for x in range(0, 5):
+        if start[x]=='*':
+            temp_test_start.append(check_list[x])
+        else:
+            temp_test_start.append(int(start[x]))
     test_start=datetime.datetime(temp_test_start[0], temp_test_start[1], temp_test_start[2], temp_test_start[3], temp_test_start[4])
     #Do it again with the end date
     temp_test_end=[]
-    if end[0]=='*':
-        temp_test_end.append(check.year)
-    else:
-        temp_test_end.append(int(end[0]))
-    if end[1]=='*':
-        temp_test_end.append(check.month)
-    else:
-        temp_test_end.append(int(end[1]))
-    if end[2]=='*':
-        temp_test_end.append(check.day)
-    else:
-        temp_test_end.append(int(end[2]))
-    if end[3]=='*':
-        temp_test_end.append(check.hour)
-    else:
-        temp_test_end.append(int(end[3]))
-    if end[4]=='*':
-        temp_test_end.append(check.minute)
-    else:
-        temp_test_end.append(int(end[4]))
+    for x in range(0, 5):
+        if end[x]=='*':
+            temp_test_end.append(check_list[x])
+        else:
+            temp_test_end.append(int(end[x]))
     test_end=datetime.datetime(temp_test_end[0], temp_test_end[1], temp_test_end[2], temp_test_end[3], temp_test_end[4])
     if test_start <= check <= test_end:
         return True
