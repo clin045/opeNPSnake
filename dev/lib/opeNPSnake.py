@@ -12,11 +12,7 @@ values, count = [], []          #Values holds the lines in the report
 
 start_time, end_time = "", ""   #Start and end time frames given by user
 
-
-#0 = html
-#1 = csv
-#2 = tsv
-outputFormat = 0
+outputFormat = 'html'
 
 #When -h is called or the user doesn't do something right
 helpfile="""
@@ -132,11 +128,11 @@ def main():
             loadConf(arg)
         #Generates HTML report
         elif opt == '-H':
-            outputFormat=0
+            outputFormat='html'
         elif opt == '-C':
-            outputFormat=1
+            outputFormat='csv'
         elif opt == '-T':
-            outputFormat=2
+            outputFormat='tsv'
             
     #Make sure they specified a -p parameter
     if ('-h', '') not in opts:
@@ -167,18 +163,18 @@ def main():
                 
         #Generating the reports
         
-        if outputFormat == 0:
+        if outputFormat == 'html':
             #If there wasn't a specified outputDir we just use the default(cwd)
             if outputDir == '':
                 htmlReportGen.generate(values, parameters, count)
             else:
                 htmlReportGen.generate(values, parameters, count, outputDir)
-        if outputFormat == 1:
+        if outputFormat == 'csv':
             if outputDir == '':
                 helperFunctions.genCsv(values,parameters,count)
             else:
                 helperFunctions.genCsv(values,parameters,count,outputDir)
-        if outputFormat == 2:
+        if outputFormat == 'tsv':
             if outputDir == '':
                 helperFunctions.genTsv(values,parameters,count)
             else:
