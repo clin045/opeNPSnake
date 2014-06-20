@@ -46,6 +46,8 @@ def getParameters(params):
     possible_params = fileParser.checkFilesForParameters(inputDir)
     global parameters
     for p in params:
+        if p[0] == " ":
+            p = p[1:]
         if p not in parameters and p in possible_params:
             parameters[p] = params[p]
         elif p not in possible_params:
@@ -146,7 +148,6 @@ def main():
         elif opt == '-T':
             outputFormat='tsv'
             
-    #Make sure they specified a -p parameter
     if ('-h', '') not in opts:
         getParameters(paramlst)
     if len(parameters) > 0:
@@ -181,16 +182,11 @@ def main():
                 htmlReportGen.generate(values, parameters, count)
             else:
                 htmlReportGen.generate(values, parameters, count, outputDir)
-        if outputFormat == 'csv':
+        else:
             if outputDir == '':
-                helperFunctions.genCsv(values,parameters,count)
+                helperFunctions.genReport(values,parameters,count,repType=outputFormat)
             else:
-                helperFunctions.genCsv(values,parameters,count,outputDir)
-        if outputFormat == 'tsv':
-            if outputDir == '':
-                helperFunctions.genTsv(values,parameters,count)
-            else:
-                helperFunctions.genTsv(values,parameters,count,outputDir)
+                helperFunctions.genReport(values, parameters, count, outputDir, outputFormat)
 
     elif ('-P', '') not in opts and ('-h', '') not in opts:
         print(helpfile)

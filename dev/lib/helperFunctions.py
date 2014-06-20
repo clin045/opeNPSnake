@@ -32,33 +32,22 @@ def checkDateinRange(start, end, check):
         return True
     else:
         return False
-    
-def genCsv(values, parameters, count=[], folder=os.getcwd()+'/'):
-    report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.csv','w')
+
+def genReport(values, parameters, count=[], folder=os.getcwd()+'/', repType='csv'):
+    if repType== 'csv':
+        differs = ['csv', ',']
+    else:
+        differs = ['tsv', '\t']
+    report = open(folder + str(datetime.datetime.today()).replace(':','').replace(' ','-')[0:15]+'report.'+differs[0],'w')
     for p in parameters:
-        report.write(p+',')
+        report.write(p+differs[1])
     if count != []:
         report.write('# of Events')
     report.write('\n')
     for v in values:
-        for i in range(0,len(v)):
-            report.write(v[i]+',')
+        for i in range(0, len(v)):
+            report.write(v[i] + differs[1])
         if count != []:
             report.write(str(count[values.index(v)]))
         report.write('\n')
-    print("\n\nOutput to " + folder)
-    
-def genTsv(values, parameters, count=[], folder=os.getcwd()+'/'):
-    report = open(folder + str(datetime.datetime.today()).replace(':','').replace('.','').replace(' ','').replace('-','')[0:14]+'report.tsv','w')
-    for p in parameters:
-        report.write(p+'\t')
-    if count != []:
-        report.write('# of Events')
-    report.write('\n')
-    for v in values:
-        for i in range(0,len(v)):
-            report.write(v[i]+'\t')
-        if count != []:
-            report.write(str(count[values.index(v)]))
-        report.write('\n')
-    print("\n\nOutput to " + folder)
+    print('\n\nOutput to ' + folder)
