@@ -1,4 +1,4 @@
-import os, sys, getopt, configparser, datetime
+import os, sys, getopt, configparser, datetime, argparse
 import htmlReportGen, fileParser, helperFunctions
 
 possible_params = []            #Possible parameters they could input
@@ -16,28 +16,13 @@ outputFormat = 'html'
 
 #When -h is called or the user doesn't do something right
 helpfile="""
-               ,   .,---.,---.          |         
-,---.,---.,---.|\  ||---'`---.,---.,---.|__/ ,---.
-|   ||   ||---'| \ ||        ||   |,---||  \ |---'
-`---'|---'`---'`  `'`    `---'`   '`---^`   ``---'
-     |
-
 Parses NPS logs and generates useful reports
 
-Usage: python opeNPSnake.py -i "filepath" [options]
-
-Options:
-    -h Prints out this help file
-    -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
-    -o Output directory (Defaults to the current working directory)
-    -P Prints list of log parameterss
-    -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:!filter3,arg3] You can exclude results by prepending a filter with !
-    -c Specifies config file (see sample.conf)
-    -t Specify the time frame [-t "* * * * *,* * * * *"] Year, Month, Day, Hour, Minute. * is a wildcard.
-    -H Generates output as a pretty HTML document (default)
-    -C Generates output as a CSV file
-    -T Generates output as a TSV file
-     
+Example Usage:
+        python opeNPSnake -i "C:\\Users\\user.name\\Desktop\\NPSLogFile\\weekend" -P\n
+python opeNPSnake -i "C:\\Users\\user.name\\Desktop\\NPSLogFile\\weekend" -p "Fully Qualifed User Name, Reason Code"\n
+python opeNPSnake -i "C:\\Users\\user.name\\Desktop\\NPSLogFile\\weekend" -p "Fully Qualifed User Name:DOMAIN/USER, Reason Code:48"\n
+python opeNPSnake -i "C:\\Users\\user.name\\Desktop\\NPSLogFile\\weekend" -p "Fully Qualifed User Name:DOMAIN/USER, Reason Code:48" -t "2014 4 * 0 *","2014 5 * 12 *"\n     
 """
 
 #Checks the parameters that the user specified and drops the ones that
@@ -66,7 +51,7 @@ def getFilters(arg):
         except:
             filterlst.append('')
 
-        paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
+        paramlst[p.split(':')[0].replace(' ', '-')]=filterlst
     return paramlst
 
 #loads config file
@@ -109,88 +94,90 @@ def main():
     global filters
     global outputDir, inputDir
     global start_time, end_time
-    #get the cmd line options
-    opts, args = getopt.getopt(sys.argv[1:],'hi:o:Pp:t:c:HCT')
-    #Run the right commands based on cmd options
-    for opt, arg in opts:
-        paramlst = {}
-        #print help file
-        if opt == '-h':
-            print(helpfile)
-        #get input directory
-        elif opt == '-i':
-            inputDir = helperFunctions.getFolderPath(arg)
-        #get output directory
-        elif opt == '-o':
-            outputDir = helperFunctions.getFolderPath(arg)
-        #prints out list of possible parameters
-        elif opt == '-P':
-            possible_params = fileParser.checkFilesForParameters(inputDir)
-            for param in possible_params:
-                print(param.replace("-", " "))
-        #selects parameters for parsing
-        elif opt == '-p':
-            paramlst = getFilters(arg)
-            getParameters(paramlst)
-        #specifies the time frame
-        elif opt == '-t':
-            parameters['Timestamp']=''
-            global start_time,end_time
-            start_time,end_time=arg.split(',')[0].split(' '),arg.split(',')[1].split(' ')
-        #Load parameters/filters from a config file
-        elif opt == '-c':
-            loadConf(arg)
-        #Generates HTML report
-        elif opt == '-H':
-            outputFormat='html'
-        elif opt == '-C':
-            outputFormat='csv'
-        elif opt == '-T':
-            outputFormat='tsv'
-            
-    if ('-h', '') not in opts:
-        getParameters(paramlst)
-    if len(parameters) > 0:
-        values, count = fileParser.parseFiles(inputDir, parameters)
-        #stupid way to check if -t
-        if 'Timestamp' in parameters:
-            #take out everything except events in specified time range
-            tempv=[]
-            for v in values:
-                date = v[list(parameters.keys()).index("Timestamp")]
-                dt = datetime.datetime(int(date.split('/')[2].split(" ")[0]),int(date.split('/')[0]),int(date.split('/')[1]),int(date.split(' ')[1].split(':')[0]),int(date.split(':')[1]))
-                if helperFunctions.checkDateinRange(start_time,end_time,dt):
-                    tempv.append(v)
-            values=tempv
-            for v in values:
-                v.remove(v[list(parameters.keys()).index("Timestamp")])
-            del(parameters['Timestamp'])
-            temp = []
-            for v in values:
-                if v in temp:
-                    count[temp.index(v)] += 1
-                else:
-                    temp.append(v)
-                    count.append(1)
-            values = temp
-                
-        #Generating the reports
-        
-        if outputFormat == 'html':
-            #If there wasn't a specified outputDir we just use the default(cwd)
-            if outputDir == '':
-                htmlReportGen.generate(values, parameters, count)
-            else:
-                htmlReportGen.generate(values, parameters, count, outputDir)
-        else:
-            if outputDir == '':
-                helperFunctions.genReport(values,parameters,count,repType=outputFormat)
-            else:
-                helperFunctions.genReport(values, parameters, count, outputDir, outputFormat)
 
-    elif ('-P', '') not in opts and ('-h', '') not in opts:
-        print(helpfile)
-        print("You did not specify any parameters")
+    parser = argparse.ArgumentParser(prog="""
+               ,   .,---.,---.          |         
+,---.,---.,---.|\  ||---'`---.,---.,---.|__/ ,---.
+|   ||   ||---'| \ ||        ||   |,---||  \ |---'
+`---'|---'`---'`  `'`    `---'`   '`---^`   ``---'
+     |
+""",description=helpfile)
+    parser.add_argument('--input', '-i', dest='inputDir', required=True, help='The directory where your logs are stored')
+    parser.add_argument('--output', '-o', dest='outputDir', help='The directory where the report will be placed')
+    parser.add_argument('--showParams', '-P', action='store_true', help='Shows the possible parameters')
+    parser.add_argument('--params', '-p', dest='paramlst', help='The parameters and filters used')
+    parser.add_argument('--timestamp', '-t', dest='time', help='Time frame of the information you want')
+    parser.add_argument('--config', '-c', dest='configFile', help='The location of the configuration file')
+    parser.add_argument('--HTML', '-H', action='store_true', help='If you want an HTML report')
+    parser.add_argument('--CSV', '-C', action='store_true', help='If you want a CSV report')
+    parser.add_argument('--TSV', '-T', action='store_true', help='If you want a TSV report')
+
+    args = parser.parse_args()
+    inputDir = helperFunctions.getFolderPath(args.inputDir)
+    if args.outputDir:
+        outputDir = helperFunctions.getFolderPath(args.outputDir)
+    if args.showParams:
+        possible_params = fileParser.checkFilesForParameters(inputDir)
+        for param in possible_params:
+            print(param.replace("-", " "))
+    if args.paramlst:
+        paramlst = getFilters(args.paramlst)
+        getParameters(paramlst)
+    if args.time:
+        parameters['Timestamp']=''
+        start_time,end_time=args.time.split(',')[0].split(' '),args.time.split(',')[1].split(' ')
+    if args.configFile:
+        loadConf(args.configFile)
+    if args.HTML:
+        outputFormat='html'
+    elif args.CSV:
+        outputFormat='csv'
+    elif args.TSV:
+        outputFormat='tsv'
+
+    if args.paramlst:
+        getParameters(paramlst)
+        if len(parameters) > 0:
+            values, count = fileParser.parseFiles(inputDir, parameters)
+            #stupid way to check if -t
+            if 'Timestamp' in parameters:
+                #take out everything except events in specified time range
+                tempv=[]
+                for v in values:
+                    date = v[list(parameters.keys()).index("Timestamp")]
+                    dt = datetime.datetime(int(date.split('/')[2].split(" ")[0]),int(date.split('/')[0]),int(date.split('/')[1]),int(date.split(' ')[1].split(':')[0]),int(date.split(':')[1]))
+                    if helperFunctions.checkDateinRange(start_time,end_time,dt):
+                        tempv.append(v)
+                values=tempv
+                for v in values:
+                    v.remove(v[list(parameters.keys()).index("Timestamp")])
+                del(parameters['Timestamp'])
+                temp = []
+                for v in values:
+                    if v in temp:
+                        count[temp.index(v)] += 1
+                    else:
+                        temp.append(v)
+                        count.append(1)
+                values = temp
+                    
+            #Generating the reports
+            
+            if outputFormat == 'html':
+                #If there wasn't a specified outputDir we just use the default(cwd)
+                if outputDir == '':
+                    htmlReportGen.generate(values, parameters, count)
+                else:
+                    htmlReportGen.generate(values, parameters, count, outputDir)
+            else:
+                if outputDir == '':
+                    helperFunctions.genReport(values,parameters,count,repType=outputFormat)
+                else:
+                    helperFunctions.genReport(values, parameters, count, outputDir, outputFormat)
+
+        elif ('-P', '') not in opts and ('-h', '') not in opts:
+            print(helpfile)
+            print("You did not specify any parameters")
             
 if __name__ == '__main__':
     main()
