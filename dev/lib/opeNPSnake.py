@@ -18,20 +18,11 @@ outputFormat = 'html'
 helpfile="""
 Parses NPS logs and generates useful reports
 
-Usage: python opeNPSnake.py -i "filepath" [options]
-
-Options:
-    -h Prints out this help file
-    -i Input file/directory (YOU MUST QUOTE THE FILE PATH)
-    -o Output directory (Defaults to the current working directory)
-    -P Prints list of log parameterss
-    -p Select parameters for parsing [-p arg1:filter1,arg2:filter2:!filter3,arg3] You can exclude results by prepending a filter with !
-    -c Specifies config file (see sample.conf)
-    -t Specify the time frame [-t "* * * * *,* * * * *"] Year, Month, Day, Hour, Minute. * is a wildcard.
-    -H Generates output as a pretty HTML document (default)
-    -C Generates output as a CSV file
-    -T Generates output as a TSV file
-     
+Example Usage:
+        python opeNPSnake -i "C:\\Users\\user.name\\Desktop\\NPSLogFile\\weekend" -P\n
+python opeNPSnake -i "C:\\Users\\user.name\\Desktop\\NPSLogFile\\weekend" -p "Fully Qualifed User Name, Reason Code"\n
+python opeNPSnake -i "C:\\Users\\user.name\\Desktop\\NPSLogFile\\weekend" -p "Fully Qualifed User Name:DOMAIN/USER, Reason Code:48"\n
+python opeNPSnake -i "C:\\Users\\user.name\\Desktop\\NPSLogFile\\weekend" -p "Fully Qualifed User Name:DOMAIN/USER, Reason Code:48" -t "2014 4 * 0 *","2014 5 * 12 *"\n     
 """
 
 #Checks the parameters that the user specified and drops the ones that
