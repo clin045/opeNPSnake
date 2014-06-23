@@ -16,12 +16,6 @@ outputFormat = 'html'
 
 #When -h is called or the user doesn't do something right
 helpfile="""
-               ,   .,---.,---.          |         
-,---.,---.,---.|\  ||---'`---.,---.,---.|__/ ,---.
-|   ||   ||---'| \ ||        ||   |,---||  \ |---'
-`---'|---'`---'`  `'`    `---'`   '`---^`   ``---'
-     |
-
 Parses NPS logs and generates useful reports
 
 Usage: python opeNPSnake.py -i "filepath" [options]
@@ -66,7 +60,7 @@ def getFilters(arg):
         except:
             filterlst.append('')
 
-        paramlst[p.split(':')[0].lower().replace(' ', '-').title()]=filterlst
+        paramlst[p.split(':')[0].replace(' ', '-')]=filterlst
     return paramlst
 
 #loads config file
@@ -150,48 +144,49 @@ def main():
     elif args.TSV:
         outputFormat='tsv'
 
-    getParameters(paramlst)
-    if len(parameters) > 0:
-        values, count = fileParser.parseFiles(inputDir, parameters)
-        #stupid way to check if -t
-        if 'Timestamp' in parameters:
-            #take out everything except events in specified time range
-            tempv=[]
-            for v in values:
-                date = v[list(parameters.keys()).index("Timestamp")]
-                dt = datetime.datetime(int(date.split('/')[2].split(" ")[0]),int(date.split('/')[0]),int(date.split('/')[1]),int(date.split(' ')[1].split(':')[0]),int(date.split(':')[1]))
-                if helperFunctions.checkDateinRange(start_time,end_time,dt):
-                    tempv.append(v)
-            values=tempv
-            for v in values:
-                v.remove(v[list(parameters.keys()).index("Timestamp")])
-            del(parameters['Timestamp'])
-            temp = []
-            for v in values:
-                if v in temp:
-                    count[temp.index(v)] += 1
+    if args.paramlst:
+        getParameters(paramlst)
+        if len(parameters) > 0:
+            values, count = fileParser.parseFiles(inputDir, parameters)
+            #stupid way to check if -t
+            if 'Timestamp' in parameters:
+                #take out everything except events in specified time range
+                tempv=[]
+                for v in values:
+                    date = v[list(parameters.keys()).index("Timestamp")]
+                    dt = datetime.datetime(int(date.split('/')[2].split(" ")[0]),int(date.split('/')[0]),int(date.split('/')[1]),int(date.split(' ')[1].split(':')[0]),int(date.split(':')[1]))
+                    if helperFunctions.checkDateinRange(start_time,end_time,dt):
+                        tempv.append(v)
+                values=tempv
+                for v in values:
+                    v.remove(v[list(parameters.keys()).index("Timestamp")])
+                del(parameters['Timestamp'])
+                temp = []
+                for v in values:
+                    if v in temp:
+                        count[temp.index(v)] += 1
+                    else:
+                        temp.append(v)
+                        count.append(1)
+                values = temp
+                    
+            #Generating the reports
+            
+            if outputFormat == 'html':
+                #If there wasn't a specified outputDir we just use the default(cwd)
+                if outputDir == '':
+                    htmlReportGen.generate(values, parameters, count)
                 else:
-                    temp.append(v)
-                    count.append(1)
-            values = temp
-                
-        #Generating the reports
-        
-        if outputFormat == 'html':
-            #If there wasn't a specified outputDir we just use the default(cwd)
-            if outputDir == '':
-                htmlReportGen.generate(values, parameters, count)
+                    htmlReportGen.generate(values, parameters, count, outputDir)
             else:
-                htmlReportGen.generate(values, parameters, count, outputDir)
-        else:
-            if outputDir == '':
-                helperFunctions.genReport(values,parameters,count,repType=outputFormat)
-            else:
-                helperFunctions.genReport(values, parameters, count, outputDir, outputFormat)
+                if outputDir == '':
+                    helperFunctions.genReport(values,parameters,count,repType=outputFormat)
+                else:
+                    helperFunctions.genReport(values, parameters, count, outputDir, outputFormat)
 
-    elif ('-P', '') not in opts and ('-h', '') not in opts:
-        print(helpfile)
-        print("You did not specify any parameters")
+        elif ('-P', '') not in opts and ('-h', '') not in opts:
+            print(helpfile)
+            print("You did not specify any parameters")
             
 if __name__ == '__main__':
     main()
