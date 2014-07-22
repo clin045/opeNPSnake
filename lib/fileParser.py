@@ -34,7 +34,10 @@ def parseFiles(inputDir, parameters):
                     #The back </' '> tag
                     end_tag = back_extra + param
                     #temp storage for the values
-                    xml_value = get_xml_value(line, start_tag, end_tag)
+                    if param == 'User-Name':
+                        xml_value = get_xml_value(line, '<'+start_tag, end_tag)
+                    else:
+                        xml_value = get_xml_value(line, start_tag, end_tag)
                     #Checks to see if it gets passed the filter or there is no filter
                     for filt in parameters[param]:
                         if filt == xml_value:
@@ -88,6 +91,6 @@ def checkFilesForParameters(inputDir):
                     lastindex+=1
             inputfile.close()
     #These variable break or are specified through another cmdline argument
-    for param in ["Timestamp", "User-Name", "Event"]:
+    for param in ["Timestamp", "Event"]:
         possible_params.remove(param)
     return possible_params
