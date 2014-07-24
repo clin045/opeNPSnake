@@ -67,15 +67,15 @@ def loadConf(loc):
         if o == 'parameters':
             arg = c.get(section,o)
             paramlst = getFilters(arg)
-        if o == 'input':
+        elif o == 'input':
             g.inputDir = helperFunctions.getFolderPath(c.get(section,o))
-        if o == 'output':
+        elif o == 'output':
             g.outputDir = helperFunctions.getFolderPath(c.get(section,o))
-        if o == 'timeframe':
+        elif o == 'timeframe':
             g.parameters['Timestamp']=''
             arg = c.get(section,o)
             g.start_time,g.end_time=arg.split(',')[0].split(' '),arg.split(',')[1].split(' ')
-        if o == 'outputformat':
+        elif o == 'outputformat':
             arg = c.get(section,o)
             if arg=='H':
                 g.outputFormat=0
